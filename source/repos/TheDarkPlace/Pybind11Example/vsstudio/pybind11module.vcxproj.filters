@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\j0sef\source\repos\TheDarkPlace\Pybind11Example\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{CCC14670-9E08-322A-922D-F45FEB296B51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\module">
+      <UniqueIdentifier>{32bd701a-cafe-48b3-8ad3-68d7db2b04a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\j0sef\source\repos\TheDarkPlace\Pybind11Example\source\module\module.cpp">
+      <Filter>Source Files\module</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

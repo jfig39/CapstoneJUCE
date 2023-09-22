@@ -1,0 +1,5 @@
+C:/Users/j0sef/source/repos/TheDarkPlace/Pybind11Example/vsstudio/CMakeFiles/pybind11module.dir
+C:/Users/j0sef/source/repos/TheDarkPlace/Pybind11Example/vsstudio/CMakeFiles/pybind11app.dir
+C:/Users/j0sef/source/repos/TheDarkPlace/Pybind11Example/vsstudio/CMakeFiles/ALL_BUILD.dir
+C:/Users/j0sef/source/repos/TheDarkPlace/Pybind11Example/vsstudio/CMakeFiles/ZERO_CHECK.dir
+C:/Users/j0sef/source/repos/TheDarkPlace/Pybind11Example/vsstudio/externals/pybind11/CMakeFiles/ALL_BUILD.dir
