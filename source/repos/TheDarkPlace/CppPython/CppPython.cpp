@@ -7,9 +7,9 @@
 using namespace std;
 
 // https://docs.python.org/3/extending/embedding.html
-void CallPython(string PythonModuleName, string PythonFunctionName)
+void CallPython(string PythonModuleName, string PythonFunctionName) //function gets data from python
 {
-	char* funcname = new char[PythonFunctionName.length() + 1];
+	char* funcname = new char[PythonFunctionName.length() + 1];  
 	strcpy_s(funcname, PythonFunctionName.length() + 1, PythonFunctionName.c_str());
 
 	char* modname = new char[PythonModuleName.length() + 1];
