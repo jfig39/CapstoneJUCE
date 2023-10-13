@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>60c3e721-8865-4c54-a4c2-d07a5b3f3b6d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MidiCCthreading.py</StartupFile>
+    <StartupFile>MidiIn.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

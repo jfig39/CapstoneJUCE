@@ -12,7 +12,7 @@ max_duration = 2
 signal_invert = True
 
 class CustomThread(Thread):
-    def __init__(self, target=None, args=(), kwargs={}, name=None, var1=0, shape="sine", rate='w'):
+    def __init__(self, target=None, args=(), kwargs={}, name=None, var1=0, shape="sine", rate=1):
         Thread.__init__(self, target=target, args=args, kwargs=kwargs, name=name)
         self._return = None
         self.var1 = var1
@@ -28,7 +28,7 @@ class CustomThread(Thread):
         self.midi_modulation_player = self.MidiModulationPlayer(self.midiout, channel, cc_num, speed, bpm, self.rate, min_val, max_val)
 
     class MidiModulationPlayer:
-        def __init__(self, midiout, channel=0, cc_num=75, speed=0.05, bpm=30, rate='w', min_val=0, max_val=127):
+        def __init__(self, midiout, channel=0, cc_num=75, speed=0.05, bpm=30, rate=1, min_val=0, max_val=127):
             self.midiout = midiout
             self.channel = channel
             self.cc_num = cc_num
@@ -38,19 +38,25 @@ class CustomThread(Thread):
             self.min_val = min_val
             self.max_val = max_val
             self.running = True
+            
+
+            
+        def updateRate(self, newRate):
+            self.rate = newRate
    
         def play_modulation(self, y, max_duration):
-            pause_duration = max_duration / y.size
-            print(y.size)
-            while True:
-                for v in y:
-                    print(v)
-                    v = self.convert_range(v, -1.0, 1.0, 0, 127)
-                    v = self.convert_range(v, 0, 127, self.min_val, self.max_val)
-                    print(f"Mod: {v}")
-                    mod = [CONTROL_CHANGE | self.channel, self.cc_num, v]
-                    self.midiout.send_message(mod)
-                    time.sleep(pause_duration)
+            pause_duration = (max_duration / y.size) 
+           # pause_duration = pause_duration * float(self.rate)  # Convert self.rate to a float
+            # print(y.size)
+            # while True:
+            for v in y:
+                # print(v)
+                v = self.convert_range(v, -1.0, 1.0, 0, 127)
+                v = self.convert_range(v, 0, 127, self.min_val, self.max_val)
+                # print(f"Mod: {v}")
+                mod = [CONTROL_CHANGE | self.channel, self.cc_num, v]
+                self.midiout.send_message(mod)
+                time.sleep(pause_duration * float(self.rate))  # Convert self.rate to a float)
                 
         def convert_range(self, value, in_min, in_max, out_min, out_max):
             l_span = in_max - in_min
@@ -60,7 +66,9 @@ class CustomThread(Thread):
             return int(np.round(scaled_value))
         
 
-        def modulation_shape(self, shape, period, max_duration, signal_invert):
+        def modulation_shape(self, shape, period, max_duration, signal_invert, rate):
+            self.updateRate(rate)
+            max_duration = max_duration #* float(self.rate)  # Convert self.rate to a float
             x = np.arange(0, max_duration, 0.01)
             y = 1
 
@@ -86,7 +94,7 @@ class CustomThread(Thread):
             raise ValueError("MidiModulationPlayer not created. Call create_midi_modulation_player first.")
 
         while self.running:
-            print("Custom Thread: var1 =", self.var1)
+            # print("Custom Thread: var1 =", self.var1)
             time.sleep(1)
 
         if self._target is not None:
@@ -102,22 +110,23 @@ class CustomThread(Thread):
 
     def updateVar(self, newVar):
         self.var1 = newVar
+        
+    def updateShape(self, newShape):
+        self.shape = newShape
+        
+   
 
 def add(n1, n2):
     result = n1 + n2
     return result
 
-# Input variable values
-varControl = int(input("Enter a new variable value: "))
+# Input variable value
 channel = int(input("Enter MIDI channel: "))
 cc_num = int(input("Enter MIDI CC number: "))
 speed = float(input("Enter speed: "))
 bpm = int(input("Enter BPM: "))
 
-rate = input("Enter rate ('w', 'h', 'q', 'e', 's'): ")
-while rate not in ['w', 'h', 'q', 'e', 's']:
-    print("Invalid rate input. Please enter 'w', 'h', 'q', 'e', or 's'.")
-    rate = input("Enter rate: ")
+rate = int(input("Enter Rate: "))
 
 min_val = int(input("Enter min value: "))
 max_val = int(input("Enter max value: "))
@@ -128,16 +137,26 @@ thread.create_midi_modulation_player(channel, cc_num, speed, bpm, min_val, max_v
 thread.start()
 
 # Create a waveform using the modulation_shape method
-waveform = thread.midi_modulation_player.modulation_shape(thread.shape, period, max_duration, signal_invert)
+waveform = thread.midi_modulation_player.modulation_shape(thread.shape, period, max_duration, signal_invert, rate)
 
 # Start the modulation loop within the MidiModulationPlayer
-thread.midi_modulation_player.play_modulation(thread.midi_modulation_player.modulation_shape(thread.shape, period, max_duration, signal_invert), max_duration)
+thread.midi_modulation_player.play_modulation(thread.midi_modulation_player.modulation_shape(thread.shape, period, max_duration, signal_invert, rate), max_duration)
 
 try:
     while True:
-        print("Change the variable")
-        newValue = int(input())
-        thread.updateVar(newValue)
+        print("Change the Rate")
+        # newValue = int(input())
+        # thread.updateVar(newValue)
+        newRate = input()
+        
+        print("Press p")
+        playStop = input()
+        if(playStop == 'p'):
+            print(thread.rate)
+            # waveform = thread.midi_modulation_player.modulation_shape(thread.shape, period, max_duration, signal_invert)
+            
+            thread.midi_modulation_player.play_modulation(thread.midi_modulation_player.modulation_shape(thread.shape, period, max_duration, signal_invert, newRate), max_duration)
+            
         time.sleep(3)  # Wait for 3 seconds before updating again
 except KeyboardInterrupt:
     pass
