@@ -1,4 +1,5 @@
 import threading
+from xml.sax.xmlreader import InputSource
 import rtmidi
 import time
 from rtmidi.midiconstants import CONTROL_CHANGE
@@ -116,6 +117,9 @@ def get_user_input(obj):
             obj.print_event.set()
         elif command == "stop":
             obj.print_event.clear()
+            # if(play_thread):
+            #     if play_thread.is_alive():
+            #         play_thread.join()
         elif command == "play":
             shape = input("Enter modulation shape (sine/saw/square): ")
             period = float(input("Enter period: "))
@@ -151,3 +155,17 @@ print_thread.start()
 # Join both threads to the main thread
 input_thread.join()
 print_thread.join()
+
+# Testing Checklist
+# 1. Test that you can send MIDI messages with default InputSource (default settings)
+# 2. port_name update port name to match your midi port number
+#3.  channel test switching channels 1-16 make sure all channels fuction correctly
+# 4. cc_num  test diffrent midi cc numbers and verify if your able to match them
+# 5. bpm: modify  bpm while mod is playing, verify speed of modulation changes
+# 6. rate modufy rate through all values (w, h, q, e, s)
+# 7. min_val modify min value, see what happens when its higher than max value
+# 8. max_val do same test as min_val 
+# 9. cycle through diffrent shapes (sine, saw, square) 
+
+# Try to document everything thats going wrong
+# I need to figure out how to stop multiple threads being created for a single midi CC
